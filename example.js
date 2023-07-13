@@ -3,13 +3,13 @@ const { Client, Location, List, Buttons, LocalAuth } = require('./index');
 const client = new Client({
     authStrategy: new LocalAuth(),
     // proxyAuthentication: { username: 'username', password: 'password' },
-    puppeteer: { 
+    puppeteer: {
         // args: ['--proxy-server=proxy-server-that-requires-authentication.example.com'],
         headless: false
     }
 });
 
-client.initialize();
+client.initialize('11977764377');
 
 client.on('loading_screen', (percent, message) => {
     console.log('LOADING SCREEN', percent, message);
