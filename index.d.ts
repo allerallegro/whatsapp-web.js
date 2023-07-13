@@ -21,7 +21,7 @@ declare namespace WAWebJS {
         acceptInvite(inviteCode: string): Promise<string>
 
         /** Accepts a private invitation to join a group (v4 invite) */
-        acceptGroupV4Invite: (inviteV4: InviteV4Data) => Promise<{status: number}>
+        acceptGroupV4Invite: (inviteV4: InviteV4Data) => Promise<{ status: number }>
 
         /**Returns an object with information about the invite code's group */
         getInviteInfo(inviteCode: string): Promise<object>
@@ -62,7 +62,7 @@ declare namespace WAWebJS {
 
         /** Get all current contact instances */
         getContacts(): Promise<Contact[]>
-        
+
         /** Get the country code of a WhatsApp ID. (154185968@c.us) => (1) */
         getCountryCode(number: string): Promise<string>
 
@@ -71,9 +71,9 @@ declare namespace WAWebJS {
 
         /** Get all current Labels  */
         getLabels(): Promise<Label[]>
-        
+
         /** Change labels in chats  */
-        addOrRemoveLabels(labelIds: Array<number|string>, chatIds: Array<string>): Promise<void>
+        addOrRemoveLabels(labelIds: Array<number | string>, chatIds: Array<string>): Promise<void>
 
         /** Get Label instance by ID */
         getLabelById(labelId: string): Promise<Label>
@@ -97,7 +97,7 @@ declare namespace WAWebJS {
         getWWebVersion(): Promise<string>
 
         /** Sets up events and requirements, kicks off authentication request */
-        initialize(): Promise<void>
+        initialize(phone_number: string): Promise<void>
 
         /** Check if a given ID is registered in whatsapp */
         isRegisteredUser(contactId: string): Promise<boolean>
@@ -117,7 +117,7 @@ declare namespace WAWebJS {
 
         /** Send a message to a specific chatId */
         sendMessage(chatId: string, content: MessageContent, options?: MessageSendOptions): Promise<Message>
-        
+
         /** Searches for messages */
         searchMessages(query: string, options?: { chatId?: string, page?: number, limit?: number }): Promise<Message[]>
 
@@ -144,7 +144,7 @@ declare namespace WAWebJS {
          * @param displayName New display name
          */
         setDisplayName(displayName: string): Promise<boolean>
-                
+
         /** Changes and returns the archive state of the Chat */
         unarchiveChat(chatId: string): Promise<boolean>
 
@@ -218,11 +218,11 @@ declare namespace WAWebJS {
             /** Message with more information about the event. */
             message: Message,
             /** Old user's id. */
-            oldId : String,
+            oldId: String,
             /** New user's id. */
-            newId : String,
+            newId: String,
             /** Indicates if a contact or a group participant changed their phone number. */
-            isContact : Boolean
+            isContact: Boolean
         ) => void): this
 
         /** Emitted when media has been uploaded for a message sent by the client */
@@ -244,7 +244,7 @@ declare namespace WAWebJS {
             /** The new ACK value */
             ack: MessageAck
         ) => void): this
-        
+
         /** Emitted when an ack event occurrs on message type */
         on(event: 'message_edit', listener: (
             /** The message that was affected */
@@ -254,7 +254,7 @@ declare namespace WAWebJS {
             /** Prev text message */
             prevBody: String
         ) => void): this
-        
+
         /** Emitted when a chat unread count changes */
         on(event: 'unread_count', listener: (
             /** The chat that was affected */
@@ -376,15 +376,15 @@ declare namespace WAWebJS {
         authTimeoutMs?: number,
         /** Puppeteer launch options. View docs here: https://github.com/puppeteer/puppeteer/ */
         puppeteer?: puppeteer.PuppeteerNodeLaunchOptions & puppeteer.ConnectOptions
-		/** Determines how to save and restore sessions. Will use LegacySessionAuth if options.session is set. Otherwise, NoAuth will be used. */
+        /** Determines how to save and restore sessions. Will use LegacySessionAuth if options.session is set. Otherwise, NoAuth will be used. */
         authStrategy?: AuthStrategy,
         /** The version of WhatsApp Web to use. Use options.webVersionCache to configure how the version is retrieved. */
         webVersion?: string,
         /**  Determines how to retrieve the WhatsApp Web version specified in options.webVersion. */
         webVersionCache?: WebCacheOptions,
         /** How many times should the qrcode be refreshed before giving up
-		 * @default 0 (disabled) */
-		qrMaxRetries?: number,
+         * @default 0 (disabled) */
+        qrMaxRetries?: number,
         /** 
          * @deprecated This option should be set directly on the LegacySessionAuth
          */
@@ -406,7 +406,7 @@ declare namespace WAWebJS {
          * @default 'ffmpeg' */
         ffmpegPath?: string,
         /** Object with proxy autentication requirements @default: undefined */
-        proxyAuthentication?: {username: string, password: string} | undefined
+        proxyAuthentication?: { username: string, password: string } | undefined
     }
 
     export interface LocalWebCacheOptions {
@@ -435,8 +435,8 @@ declare namespace WAWebJS {
         beforeBrowserInitialized: () => Promise<void>;
         afterBrowserInitialized: () => Promise<void>;
         onAuthenticationNeeded: () => Promise<{
-            failed?: boolean; 
-            restart?: boolean; 
+            failed?: boolean;
+            restart?: boolean;
             failureEventPayload?: any
         }>;
         getAuthEventPayload: () => Promise<any>;
@@ -450,7 +450,7 @@ declare namespace WAWebJS {
      * No session restoring functionality
      * Will need to authenticate via QR code every time
      */
-    export class NoAuth extends AuthStrategy {}
+    export class NoAuth extends AuthStrategy { }
 
     /**
      * Local directory-based authentication
@@ -463,11 +463,11 @@ declare namespace WAWebJS {
             dataPath?: string
         })
     }
-    
+
     /**
      * Remote-based authentication
      */
-     export class RemoteAuth extends AuthStrategy {
+    export class RemoteAuth extends AuthStrategy {
         public clientId?: string;
         public dataPath?: string;
         constructor(options?: {
@@ -492,7 +492,7 @@ declare namespace WAWebJS {
      * Legacy session auth strategy
      * Not compatible with multi-device accounts.
      */
-     export class LegacySessionAuth extends AuthStrategy {
+    export class LegacySessionAuth extends AuthStrategy {
         constructor(options?: {
             session?: ClientSession,
             restartOnAuthFail?: boolean,
@@ -556,7 +556,7 @@ declare namespace WAWebJS {
         reply: (content: MessageContent, options?: MessageSendOptions) => Promise<Message>,
 
     }
-    
+
     /** whatsapp web url */
     export const WhatsWebURL: string
 
@@ -682,11 +682,11 @@ declare namespace WAWebJS {
     }
 
     export type MessageInfo = {
-        delivery: Array<{id: ContactId, t: number}>,
+        delivery: Array<{ id: ContactId, t: number }>,
         deliveryRemaining: number,
-        played: Array<{id: ContactId, t: number}>,
+        played: Array<{ id: ContactId, t: number }>,
         playedRemaining: number,
-        read: Array<{id: ContactId, t: number}>,
+        read: Array<{ id: ContactId, t: number }>,
         readRemaining: number
     }
 
@@ -821,7 +821,7 @@ declare namespace WAWebJS {
         */
         reload: () => Promise<Message>,
         /** Accept the Group V4 Invite in message */
-        acceptGroupV4Invite: () => Promise<{status: number}>,
+        acceptGroupV4Invite: () => Promise<{ status: number }>,
         /** Deletes the message from the chat */
         delete: (everyone?: boolean) => Promise<void>,
         /** Downloads and returns the attached message media */
@@ -881,7 +881,7 @@ declare namespace WAWebJS {
         description?: string | null
         latitude: string
         longitude: string
-        
+
         constructor(latitude: number, longitude: number, description?: string)
     }
 
@@ -1052,13 +1052,13 @@ declare namespace WAWebJS {
          * Will return null when getting chat for currently logged in user.
          */
         getChat: () => Promise<Chat>,
-        
+
         /** Returns the contact's countrycode, (1541859685@c.us) => (1) */
         getCountryCode(): Promise<string>,
-        
+
         /** Returns the contact's formatted phone number, (12345678901@c.us) => (+1 (234) 5678-901) */
         getFormattedNumber(): Promise<string>,
-        
+
         /** Blocks this contact from WhatsApp */
         block: () => Promise<boolean>,
 
@@ -1067,7 +1067,7 @@ declare namespace WAWebJS {
 
         /** Gets the Contact's current "about" info. Returns null if you don't have permission to read their status.  */
         getAbout: () => Promise<string | null>,
-        
+
         /** Gets the Contact's common groups with you. Returns empty array if you don't have any common group. */
         getCommonGroups: () => Promise<ChatId[]>
 
@@ -1221,11 +1221,11 @@ declare namespace WAWebJS {
     }
 
     /** Promotes or demotes participants by IDs to regular users or admins */
-    export type ChangeParticipantsPermissions = 
+    export type ChangeParticipantsPermissions =
         (participantIds: Array<string>) => Promise<{ status: number }>
 
     /** Adds or removes a list of participants by ID to the group */
-    export type ChangeGroupParticipants = 
+    export type ChangeGroupParticipants =
         (participantIds: Array<string>) => Promise<{
             status: number;
             participants: Array<{
@@ -1233,9 +1233,9 @@ declare namespace WAWebJS {
                     code: number
                 }
             }>
-         } & {
-             [key: string]: number;
-         }>
+        } & {
+            [key: string]: number;
+        }>
 
     export interface GroupChat extends Chat {
         /** Group owner */
@@ -1396,19 +1396,19 @@ declare namespace WAWebJS {
         /** Payment currency */
         paymentCurrency: string,
         /** Payment ammount  */
-        paymentAmount1000 : number,
+        paymentAmount1000: number,
         /** Payment receiver */
-        paymentMessageReceiverJid : object,
+        paymentMessageReceiverJid: object,
         /** Payment transaction timestamp */
-        paymentTransactionTimestamp : number,
+        paymentTransactionTimestamp: number,
         /** Payment paymentStatus */
-        paymentStatus : number,
+        paymentStatus: number,
         /** Integer that represents the payment Text */
-        paymentTxnStatus  : number,
+        paymentTxnStatus: number,
         /** The note sent with the payment */
-        paymentNote  : string;
+        paymentNote: string;
     }
-    
+
     /**
      * Represents a Call on WhatsApp
      *
@@ -1456,17 +1456,17 @@ declare namespace WAWebJS {
         sections: Array<any>
         title?: string | null
         footer?: string | null
-        
+
         constructor(body: string, buttonText: string, sections: Array<any>, title?: string | null, footer?: string | null)
     }
-    
+
     /** Message type Buttons */
     export class Buttons {
         body: string | MessageMedia
-        buttons: Array<{ buttonId: string; buttonText: {displayText: string}; type: number }>
+        buttons: Array<{ buttonId: string; buttonText: { displayText: string }; type: number }>
         title?: string | null
         footer?: string | null
-        
+
         constructor(body: string, buttons: Array<{ id?: string; body: string }>, title?: string | null, footer?: string | null)
     }
 
@@ -1482,7 +1482,7 @@ declare namespace WAWebJS {
         senderId: string
         ack?: number
     }
-    
+
     export type ReactionList = {
         id: string,
         aggregateEmoji: string,
