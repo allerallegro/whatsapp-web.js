@@ -60,6 +60,9 @@ declare namespace WAWebJS {
         /** Get contact instance by ID */
         getContactById(contactId: string): Promise<Contact>
 
+        /** Get whatsapp auth code */
+        getWhatsappAuthCode(): string
+
         /** Get message by ID */
         getMessageById(messageId: string): Promise<Message>
 

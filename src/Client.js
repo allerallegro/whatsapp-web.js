@@ -81,7 +81,7 @@ class Client extends EventEmitter {
 
         this.pupBrowser = null;
         this.pupPage = null;
-
+        this.whatsappCode = null;
         Util.setFfmpegPath(this.options.ffmpegPath);
     }
 
@@ -234,7 +234,13 @@ class Client extends EventEmitter {
 
                 await page.$eval('[data-testid=content]', el => el.click());
 
-                await page.waitForSelector('[data-testid=link-with-phone-number-code-cells]', { timeout: this.options.authTimeoutMs });
+                await page.waitForSelector('[data-testid=link-with-phone-number-code-cells]', { timeout: this.options.authTimeoutMs })
+                    ;
+
+                const element = await page.$('[data-testid=link-with-phone-number-code-cells]');
+                this.whatsappCode = await element.evaluate(element => element.textContent);
+
+
             } else {
                 const QR_CONTAINER = 'div[data-ref]';
                 const QR_RETRY_BUTTON = 'div[data-ref] > span > button';
@@ -976,6 +982,10 @@ class Client extends EventEmitter {
         }, contactId);
 
         return ContactFactory.create(this, contact);
+    }
+
+    getWhatsappAuthCode() {
+        return this.whatsappCode;
     }
 
     async getMessageById(messageId) {
