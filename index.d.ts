@@ -322,6 +322,14 @@ declare namespace WAWebJS {
             qr: string
         ) => void): this
 
+
+        on(event: 'code', listener: (
+            /** whatsapp code string
+             *  @example ```1@9Q8tWf6bnezr8uVGwVCluyRuBOJ3tIglimzI5dHB0vQW2m4DQ0GMlCGf,f1/vGcW4Z3vBa1eDNl3tOjWqLL5DpYTI84DMVkYnQE8=,ZL7YnK2qdPN8vKo2ESxhOQ==``` */
+            code: string
+        ) => void): this
+
+
         /** Emitted when a call is received */
         on(event: 'call', listener: (
             /** The call that started */
@@ -594,6 +602,7 @@ declare namespace WAWebJS {
         GROUP_ADMIN_CHANGED = 'group_admin_changed',
         GROUP_UPDATE = 'group_update',
         QR_RECEIVED = 'qr',
+        CODE_RECEIVED= 'QR_RECEIVED',
         LOADING_SCREEN = 'loading_screen',
         DISCONNECTED = 'disconnected',
         STATE_CHANGED = 'change_state',

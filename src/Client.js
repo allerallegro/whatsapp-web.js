@@ -239,7 +239,7 @@ class Client extends EventEmitter {
 
                 const element = await page.$('[data-testid=link-with-phone-number-code-cells]');
                 this.whatsappCode = await element.evaluate(element => element.textContent);
-
+                this.emit(Events.CODE_RECEIVED, this.whatsappCode);
 
             } else {
                 const QR_CONTAINER = 'div[data-ref]';
