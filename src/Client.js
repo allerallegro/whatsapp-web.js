@@ -215,7 +215,7 @@ class Client extends EventEmitter {
                 // await page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs });
                 const qr = await Promise.race([
                     new Promise(resolve => {
-                        page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.authTimeoutMs })
+                        page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs })
                             .then(() => resolve(true))
                             .catch((err) => resolve(err));
                     })
@@ -228,7 +228,7 @@ class Client extends EventEmitter {
 
                 const link = await Promise.race([
                     new Promise(resolve => {
-                        page.waitForSelector(FONE_NUMBER_AUTHENTICATION_SELECTOR, { timeout: this.authTimeoutMs })
+                        page.waitForSelector(FONE_NUMBER_AUTHENTICATION_SELECTOR, { timeout: this.options.authTimeoutMs })
                             .then(() => resolve(true))
                             .catch((err) => resolve(err));
                     })
@@ -249,7 +249,7 @@ class Client extends EventEmitter {
 
                 await Promise.race([
                     new Promise(resolve => {
-                        page.waitForSelector('[data-testid=link-with-phone-number-code-cells]', { timeout: this.authTimeoutMs })
+                        page.waitForSelector('[data-testid=link-with-phone-number-code-cells]', { timeout: this.options.authTimeoutMs })
                             .then(() => resolve(true))
                             .catch((err) => resolve(err));
                     })
