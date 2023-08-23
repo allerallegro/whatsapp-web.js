@@ -217,7 +217,10 @@ class Client extends EventEmitter {
                     new Promise(resolve => {
                         page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs })
                             .then(() => resolve(true))
-                            .catch((err) => resolve(err));
+                            .catch((err) => {
+                                console.log(page.content())
+                                return resolve(err);
+                            });
                     })
                 ]);
 
