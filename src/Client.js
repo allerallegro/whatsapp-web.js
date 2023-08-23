@@ -212,13 +212,21 @@ class Client extends EventEmitter {
             if (phone_number) {
                 //login by phone number
                 const LINK_QRCODE_SELECTOR = '[data-testid=link-device-qrcode-alt-linking-hint]';
-                await page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs });
+                // await page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs });
+                await Promise.race([
+                    new Promise(resolve => {
+                        page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: 10 * 1000 })
+                            .then(() => resolve(true))
+                            .catch((err) => resolve(err));
+                    })
+                ]);
+
                 await page.$eval(LINK_QRCODE_SELECTOR, el => el.click());
                 const FONE_NUMBER_AUTHENTICATION_SELECTOR = '[data-testid=link-device-phone-number-input]';
 
                 await Promise.race([
                     new Promise(resolve => {
-                        page.waitForSelector(FONE_NUMBER_AUTHENTICATION_SELECTOR, { timeout: this.options.authTimeoutMs })
+                        page.waitForSelector(FONE_NUMBER_AUTHENTICATION_SELECTOR, { timeout: 10 * 1000 })
                             .then(() => resolve(true))
                             .catch((err) => resolve(err));
                     })
