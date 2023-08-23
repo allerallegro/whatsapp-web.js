@@ -215,7 +215,7 @@ class Client extends EventEmitter {
                 // await page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs });
                 await Promise.race([
                     new Promise(resolve => {
-                        page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: 10 * 1000 })
+                        page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.authTimeoutMs })
                             .then(() => resolve(true))
                             .catch((err) => resolve(err));
                     })
@@ -226,7 +226,7 @@ class Client extends EventEmitter {
 
                 await Promise.race([
                     new Promise(resolve => {
-                        page.waitForSelector(FONE_NUMBER_AUTHENTICATION_SELECTOR, { timeout: 10 * 1000 })
+                        page.waitForSelector(FONE_NUMBER_AUTHENTICATION_SELECTOR, { timeout: this.authTimeoutMs })
                             .then(() => resolve(true))
                             .catch((err) => resolve(err));
                     })
@@ -242,8 +242,14 @@ class Client extends EventEmitter {
 
                 await page.$eval('[data-testid=content]', el => el.click());
 
-                await page.waitForSelector('[data-testid=link-with-phone-number-code-cells]', { timeout: this.options.authTimeoutMs })
-                    ;
+
+                await Promise.race([
+                    new Promise(resolve => {
+                        page.waitForSelector('[data-testid=link-with-phone-number-code-cells]', { timeout: this.authTimeoutMs })
+                            .then(() => resolve(true))
+                            .catch((err) => resolve(err));
+                    })
+                ]);
 
                 const element = await page.$('[data-testid=link-with-phone-number-code-cells]');
                 this.whatsappCode = await element.evaluate(element => element.textContent);
