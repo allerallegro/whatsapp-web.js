@@ -106,9 +106,6 @@ class Client extends EventEmitter {
             browser = await puppeteer.launch({ ...puppeteerOpts, args: browserArgs });
             page = (await browser.pages())[0];
         }
-        await page.setExtraHTTPHeaders({
-            'accept-language': 'en-US,en;q=0.9'
-        });
 
         if (this.options.proxyAuthentication !== undefined) {
             await page.authenticate(this.options.proxyAuthentication);
@@ -127,6 +124,10 @@ class Client extends EventEmitter {
             waitUntil: 'load',
             timeout: 0,
             referer: 'https://whatsapp.com/'
+        });
+
+        await page.evaluate(() => {
+            localStorage.setItem('WALangPref', 'en');
         });
 
         await page.evaluate(`function getElementByXpath(path) {
