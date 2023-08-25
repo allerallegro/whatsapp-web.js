@@ -106,6 +106,9 @@ class Client extends EventEmitter {
             browser = await puppeteer.launch({ ...puppeteerOpts, args: browserArgs });
             page = (await browser.pages())[0];
         }
+        await page.setExtraHTTPHeaders({
+            'accept-language': 'en-US,en;q=0.9'
+        });
 
         if (this.options.proxyAuthentication !== undefined) {
             await page.authenticate(this.options.proxyAuthentication);
@@ -212,22 +215,41 @@ class Client extends EventEmitter {
             if (phone_number) {
                 //login by phone number
                 const LINK_QRCODE_SELECTOR = '[data-testid=link-device-qrcode-alt-linking-hint]';
+
+                const textSearch = ['Link with phone number instead.', 'Conectar com número de telefone'];
                 // await page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs });
+                // const qr = await Promise.race([
+                //     new Promise(resolve => {
+                //         page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs })
+                //             .then(() => resolve(true))
+                //             .catch(async (err) => {
+                //                 console.log(await page.content())
+                //                 return resolve(err);
+                //             });
+                //     })
+                // ]);
+
+
                 const qr = await Promise.race([
-                    new Promise(resolve => {
-                        page.waitForSelector(LINK_QRCODE_SELECTOR, { timeout: this.options.authTimeoutMs })
-                            .then(() => resolve(true))
-                            .catch(async (err) => {
-                                console.log(await page.content())
-                                return resolve(err);
-                            });
+                    new Promise(async (resolve) => {
+                        try {
+                            const element = await page.waitForFunction((textSearch) => {
+                                const elements = Array.from(document.querySelectorAll('[role=button]')); // Substitua o seletor CSS pela tag desejada
+                                return elements.find(element => textSearch.some(text => element.textContent.includes(text)));
+                            }, { timeout: this.options.authTimeoutMs }, textSearch);
+
+                            resolve(element);
+                        } catch (err) {
+                            resolve(err);
+                        }
                     })
                 ]);
 
                 if (qr instanceof Error) throw qr;
 
-                await page.$eval(LINK_QRCODE_SELECTOR, el => el.click());
-                const FONE_NUMBER_AUTHENTICATION_SELECTOR = '[data-testid=link-device-phone-number-input]';
+                await qr.evaluate(el => el.click());
+
+                const FONE_NUMBER_AUTHENTICATION_SELECTOR = 'input.selectable-text';
 
                 const link = await Promise.race([
                     new Promise(resolve => {
@@ -247,18 +269,18 @@ class Client extends EventEmitter {
                     await page.keyboard.type(phone_number[t])
                 }
 
-                await page.$eval('[data-testid=content]', el => el.click());
+                await page.$eval('div[role=button] > div > div', el => el.click());
 
 
                 await Promise.race([
                     new Promise(resolve => {
-                        page.waitForSelector('[data-testid=link-with-phone-number-code-cells]', { timeout: this.options.authTimeoutMs })
+                        page.waitForSelector('[aria-details=link-device-phone-number-code-screen-instructions]', { timeout: this.options.authTimeoutMs })
                             .then(() => resolve(true))
                             .catch((err) => resolve(err));
                     })
                 ]);
 
-                const element = await page.$('[data-testid=link-with-phone-number-code-cells]');
+                const element = await page.$('[aria-details=link-device-phone-number-code-screen-instructions]');
                 this.whatsappCode = await element.evaluate(element => element.textContent);
                 this.emit(Events.CODE_RECEIVED, this.whatsappCode);
 
