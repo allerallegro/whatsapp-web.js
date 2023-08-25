@@ -337,8 +337,9 @@ class Client extends EventEmitter {
 
             // Wait for code scan
             try {
-                await page.waitForSelector(INTRO_IMG_SELECTOR, { timeout: 0 });
+                await page.waitForSelector(INTRO_IMG_SELECTOR, { timeout: 60 * 1000 });
             } catch (error) {
+                console.log(await page.content());
                 if (
                     error.name === 'ProtocolError' &&
                     error.message &&
