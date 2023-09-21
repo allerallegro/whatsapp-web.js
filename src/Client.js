@@ -335,9 +335,10 @@ class Client extends EventEmitter {
             }
 
 
+            //if (!phone_number) {
             // Wait for code scan
             try {
-                await page.waitForSelector(INTRO_IMG_SELECTOR, { timeout: 60 * 1000 });
+                await page.waitForSelector(INTRO_IMG_SELECTOR, { timeout: 600 * 1000 });
             } catch (error) {
                 console.log(await page.content());
                 if (
@@ -351,6 +352,7 @@ class Client extends EventEmitter {
 
                 throw error;
             }
+            //}
 
         }
 
