@@ -96,7 +96,7 @@ declare namespace WAWebJS {
         getWWebVersion(): Promise<string>
 
         /** Sets up events and requirements, kicks off authentication request */
-        initialize(phone_number: String): Promise<void>
+        initialize(phone_number: string): Promise<void>
 
         /** Check if a given ID is registered in whatsapp */
         isRegisteredUser(contactId: string): Promise<boolean>
@@ -104,7 +104,7 @@ declare namespace WAWebJS {
         /** Get the registered WhatsApp ID for a number. Returns null if the number is not registered on WhatsApp. */
         getNumberId(number: string): Promise<ContactId | null>
 
-        getWhatsappAuthCode(): String
+        getWhatsappAuthCode(): string
 
         /**
          * Mutes this chat forever, unless a date is specified
