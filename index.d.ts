@@ -104,6 +104,8 @@ declare namespace WAWebJS {
         /** Get the registered WhatsApp ID for a number. Returns null if the number is not registered on WhatsApp. */
         getNumberId(number: string): Promise<ContactId | null>
 
+        getWhatsappAuthCode(): String
+
         /**
          * Mutes this chat forever, unless a date is specified
          * @param chatId ID of the chat that will be muted
