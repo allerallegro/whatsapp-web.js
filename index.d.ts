@@ -662,6 +662,7 @@ declare namespace WAWebJS {
         GROUP_MEMBERSHIP_REQUEST = 'group_membership_request',
         GROUP_UPDATE = 'group_update',
         QR_RECEIVED = 'qr',
+        CODE_RECEIVED = 'code_received',
         LOADING_SCREEN = 'loading_screen',
         DISCONNECTED = 'disconnected',
         STATE_CHANGED = 'change_state',
