@@ -273,8 +273,15 @@ class Client extends EventEmitter {
                     await page.keyboard.type(phone_number[t])
                 }
 
-                await page.$eval('div[role=button] > div > div', el => el.click());
+                //await page.$eval('button > div > div', el => el.click());
 
+                const textAvancar = ['Avançar'];
+                const btnAvancar = await page.waitForFunction((textAvancar) => {
+                    const elements = Array.from(document.querySelectorAll('button > div > div')); // Substitua o seletor CSS pela tag desejada
+                    return elements.find(element => textAvancar.some(text => element.textContent.includes(text)));
+                }, { timeout: this.options.authTimeoutMs }, textAvancar);
+
+                await btnAvancar.click();
 
                 await Promise.race([
                     new Promise(resolve => {
@@ -713,10 +720,10 @@ class Client extends EventEmitter {
              */
             this.emit(Events.CHAT_REMOVED, _chat);
         });
-        
+
         await page.exposeFunction('onArchiveChatEvent', async (chat, currState, prevState) => {
             const _chat = await this.getChatById(chat.id);
-            
+
             /**
              * Emitted when a chat is archived/unarchived
              * @event Client#chat_archived
@@ -741,9 +748,9 @@ class Client extends EventEmitter {
              */
             this.emit(Events.MESSAGE_EDIT, new Message(this, msg), newBody, prevBody);
         });
-        
+
         await page.exposeFunction('onAddMessageCiphertextEvent', msg => {
-            
+
             /**
              * Emitted when messages are edited
              * @event Client#message_ciphertext
@@ -1159,7 +1166,7 @@ class Client extends EventEmitter {
         const couldSet = await this.pupPage.evaluate(async displayName => {
             if (!window.Store.Conn.canSetMyPushname()) return false;
 
-            if(window.Store.MDBackend) {
+            if (window.Store.MDBackend) {
                 await window.Store.Settings.setPushname(displayName);
                 return true;
             } else {
