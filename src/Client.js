@@ -275,7 +275,7 @@ class Client extends EventEmitter {
 
                 //await page.$eval('button > div > div', el => el.click());
 
-                const textAvancar = ['Avançar'];
+                const textAvancar = ['Avançar', 'Next'];
                 const btnAvancar = await page.waitForFunction((textAvancar) => {
                     const elements = Array.from(document.querySelectorAll('button > div > div')); // Substitua o seletor CSS pela tag desejada
                     return elements.find(element => textAvancar.some(text => element.textContent.includes(text)));
