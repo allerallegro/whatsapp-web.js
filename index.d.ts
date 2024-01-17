@@ -36,7 +36,7 @@ declare namespace WAWebJS {
         unpinChat(chatId: string): Promise<boolean>
 
         /** Creates a new group */
-        createGroup(title: string, participants?: string | Contact | Contact[] | string[], options?: CreateGroupOptions): Promise<CreateGroupResult|string>
+        createGroup(title: string, participants?: string | Contact | Contact[] | string[], options?: CreateGroupOptions): Promise<CreateGroupResult | string>
 
         /** Closes the client */
         destroy(): Promise<void>
@@ -55,6 +55,9 @@ declare namespace WAWebJS {
 
         /** Get contact instance by ID */
         getContactById(contactId: string): Promise<Contact>
+
+        /** Get whatsappcode */
+        getWhatsappAuthCode: string
 
         /** Get message by ID */
         getMessageById(messageId: string): Promise<Message>
@@ -143,7 +146,7 @@ declare namespace WAWebJS {
          * @param displayName New display name
          */
         setDisplayName(displayName: string): Promise<boolean>
-        
+
         /**
          * Changes the autoload Audio
          * @param flag true/false on or off
@@ -164,7 +167,7 @@ declare namespace WAWebJS {
          * @param flag true/false on or off
          */
         setAutoDownloadVideos(flag: boolean): Promise<void>
-                
+
         /** Changes and returns the archive state of the Chat */
         unarchiveChat(chatId: string): Promise<boolean>
 
@@ -304,7 +307,7 @@ declare namespace WAWebJS {
             /** The message that was created */
             message: Message
         ) => void): this
-        
+
         /** Emitted when a new message ciphertext is received  */
         on(event: 'message_ciphertext', listener: (
             /** The message that was ciphertext */
@@ -672,7 +675,8 @@ declare namespace WAWebJS {
         STATE_CHANGED = 'change_state',
         BATTERY_CHANGED = 'change_battery',
         REMOTE_SESSION_SAVED = 'remote_session_saved',
-        CALL = 'call'
+        CALL = 'call',
+        CODE_RECEIVED = 'code_received'
     }
 
     /** Group notification types */
@@ -927,7 +931,7 @@ declare namespace WAWebJS {
         /** Returns the Contacts mentioned in this message */
         getMentions: () => Promise<Contact[]>,
         /** Returns groups mentioned in this message */
-        getGroupMentions: () => Promise<GroupChat[]|[]>,
+        getGroupMentions: () => Promise<GroupChat[] | []>,
         /** Returns the quoted message, if any */
         getQuotedMessage: () => Promise<Message>,
         /** 
@@ -991,7 +995,7 @@ declare namespace WAWebJS {
         latitude: string;
         longitude: string;
         options?: LocationSendOptions;
-        
+
         constructor(latitude: number, longitude: number, options?: LocationSendOptions)
     }
 
@@ -1003,7 +1007,7 @@ declare namespace WAWebJS {
          * The custom message secret, can be used as a poll ID
          * @note It has to be a unique vector with a length of 32
          */
-        messageSecret: Array<number>|undefined
+        messageSecret: Array<number> | undefined
     }
 
     /** Represents a Poll on WhatsApp */
@@ -1220,7 +1224,7 @@ declare namespace WAWebJS {
         user: string,
         _serialized: string,
     }
-    
+
     export interface BusinessCategory {
         id: string,
         localized_display_name: string,
@@ -1228,9 +1232,9 @@ declare namespace WAWebJS {
 
     export interface BusinessHoursOfDay {
         mode: string,
-        hours: number[] 
+        hours: number[]
     }
-    
+
     export interface BusinessHours {
         config: {
             sun: BusinessHoursOfDay,
@@ -1242,8 +1246,8 @@ declare namespace WAWebJS {
         }
         timezone: string,
     }
-    
-    
+
+
 
     export interface BusinessContact extends Contact {
         /** 
@@ -1266,7 +1270,7 @@ declare namespace WAWebJS {
             profileOptions: {
                 /** The contact's business profile commerce experience*/
                 commerceExperience: string,
-                
+
                 /** The contact's business profile cart options */
                 cartEnabled: boolean,
             }
@@ -1279,22 +1283,22 @@ declare namespace WAWebJS {
 
             /** The contact's business profile latitude */
             latitude: number,
-            
+
             /** The contact's business profile longitude */
             longitude: number,
-            
+
             /** The contact's business profile work hours*/
             businessHours: BusinessHours
-            
+
             /** The contact's business profile address */
             address: string,
-            
+
             /** The contact's business profile facebook page */
             fbPage: object,
-            
+
             /** Indicate if the contact's business profile linked */
             ifProfileLinked: boolean
-            
+
             /** The contact's business profile coverPhoto */
             coverPhoto: null | any,
         }
@@ -1455,7 +1459,7 @@ declare namespace WAWebJS {
          * will be added). If sleep is a number, a sleep time equal to its value will be added
          * @default [250,500]
          */
-        sleep?: Array<number>|number,
+        sleep?: Array<number> | number,
         /**
          * If true, the inviteV4 will be sent to those participants
          * who have restricted others from being automatically added to groups,
